@@ -1,0 +1,10 @@
+- hosts: localhost
+  roles:
+    - { role: centos7 }
+    - { role: repo }
+    - { role: git }
+    - { role: httpd }
+    - { role: mysql }
+    - { role: php }
+    - { role: node }
+    - { role: firewall }

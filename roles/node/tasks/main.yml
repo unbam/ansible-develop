@@ -1,0 +1,19 @@
+- name: install node
+  yum: name={{ packages }} state=present enablerepo=epel
+  vars:
+    packages:
+      - nodejs
+      - npm
+
+- name: install n
+  npm: name=n global=yes
+
+- name: check version
+  command: node -v
+  changed_when: False
+  register: check_node
+
+- name: update node LTS
+  command: n 10.14.1
+  changed_when: False
+  when: check_node.stdout != "v10.14.1"

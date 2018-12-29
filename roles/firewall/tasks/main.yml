@@ -1,0 +1,19 @@
+- name: start firewalld
+  systemd:
+    name: firewalld.service
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+- name: add service http
+  firewalld: service=http permanent=true state=enabled immediate=true
+
+- name: add service https
+  firewalld: service=https permanent=true state=enabled immediate=true
+
+#- name: add service
+#  firewalld: service={{ services }} permanent=true state=enabled immediate=true
+#  vars:
+#    services:
+#      - http
+#      - https

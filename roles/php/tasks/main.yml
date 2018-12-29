@@ -1,0 +1,29 @@
+- name: install php
+  yum: name={{ packages }} state=present enablerepo=remi,remi-php72
+  vars:
+    packages:
+      - php
+      - php-common
+      - php-cli
+      - php-gd
+      - php-mbstring
+      - php-pdo
+      - php-pdo_pgsql
+      - php-mysql
+      - php-xml
+      - php-intl
+      - php-xdebug
+
+- name: backup php.ini
+  command: cp -pi /etc/php.ini /etc/php.ini.bk
+  changed_when: False
+
+- name: copy php.ini
+  template: src=php.ini dest=/etc/php.ini
+
+- name: copy phpinfo.php
+  template: src=phpinfo.php dest=/var/www/html/phpinfo.php
+
+- name: install composer
+  shell: curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+  changed_when: False

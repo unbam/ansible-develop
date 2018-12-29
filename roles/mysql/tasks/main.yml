@@ -1,0 +1,23 @@
+- name: install mysql repository
+  yum: name=https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm state=present
+
+- name: install mysql
+  yum: name=mysql-community-server state=present enablerepo=mysql80-community
+
+- name: backup my.cnf
+  command: cp -pi /etc/my.cnf /etc/my.cnf.bk
+  changed_when: False
+
+- name: copy my.cnf
+  template: src=my.cnf dest=/etc/my.cnf
+
+- name: change password policy
+  command: mysql --defaults-extra-file=/etc/my.cnf -u root -e "set global validate_password.policy=LOW;";
+  changed_when: False
+
+- name: change password length
+  command: mysql --defaults-extra-file=/etc/my.cnf -u root -e "set global validate_password.length=4;";
+  changed_when: False
+
+- name: systemctl start and enable mysql
+  service: name=mysqld state=started enabled=yes

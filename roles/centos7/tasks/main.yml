@@ -1,0 +1,11 @@
+- name: disabled selinux
+  selinux: state=disabled
+
+- name: install command
+  yum: name={{ packages }} state=present
+  vars:
+    packages:
+      - net-tools
+      - tree
+      - zip
+      - unzip

@@ -1,0 +1,25 @@
+- name: install httpd
+  yum: name=httpd
+
+- name: install mod_ssl
+  yum: name=mod_ssl
+
+- name: check autoindex.conf
+  stat:
+    path: /etc/httpd/conf.d/autoindex.conf
+  register: check_autoindex
+
+- name: rename autoindex.conf
+  command: mv /etc/httpd/conf.d/autoindex.conf /etc/httpd/conf.d/autoindex.conf.org
+  changed_when: False
+  when: check_autoindex.stat.exists
+
+- name: backup httpd.conf
+  command: cp -pi /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bk
+  changed_when: False
+
+- name: copy httpd.conf
+  template: src=httpd.conf dest=/etc/httpd/conf/httpd.conf
+
+- name: systemctl start and enable httpd
+  service: name=httpd state=started enabled=yes
